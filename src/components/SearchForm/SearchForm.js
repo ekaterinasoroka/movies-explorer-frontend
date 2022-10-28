@@ -6,10 +6,10 @@ function SearchForm() {
   return (
     <section className="search">
       <div className="search-form">
-        <label className="search-form__search">
-          <input className="search-form__input" type="search" placeholder="Фильм"></input>
+        <form className="search-form__search">
+          <input className="search-form__input" type="search" placeholder="Фильм" required></input>
           <button className="search-form__button" type="submit"></button>
-        </label>
+        </form>
         <div className="search-form__checkbox">
         <label className="search-form__check">
           <input type="checkbox"></input>
