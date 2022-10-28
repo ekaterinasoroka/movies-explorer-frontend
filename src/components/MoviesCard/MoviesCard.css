@@ -1,0 +1,82 @@
+.card {
+  padding: 0;
+  background-color: #222;
+}
+
+.card__img {
+  margin-top: 14px;
+  width: 364px;
+  height: 203px;
+}
+
+.card__element {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card__title {
+  max-width: 220px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 18px;
+  margin: 14px auto 0 14px;
+}
+
+.card__button {
+  margin: 19px 14px 0 auto;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 36px;
+  padding: 0;
+  transition: filter 0.5s linear;
+}
+
+.card__button:hover {
+  cursor: pointer;
+  filter: opacity(40%);
+}
+
+.card__button_off {
+  background: #313131 url(../../images/movies-save.svg) center no-repeat;
+}
+
+.card__button_on {
+  background: url(../../images/movies-save-active.svg) center no-repeat;
+}
+
+.card__button_delete {
+  width: 30px;
+  height: 30px;
+  background: url(../../images/movies-delete.svg) center no-repeat;
+}
+
+.card__duration {
+  margin: 9px auto 0 14px;
+  color: #8B8B8B;
+  font-size: 11px;
+  line-height: 13px;
+}
+
+@media screen and (max-width: 790px) {
+  .card__img {
+    width: 339px;
+    height: 190px;
+  }
+
+  .card__title {
+    max-width: 290px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .card__title {
+    font-size: 12px;
+    line-height: 17px;
+  }
+
+  .card__img {
+    width: 300px;
+    height: 168px;
+  }
+}
