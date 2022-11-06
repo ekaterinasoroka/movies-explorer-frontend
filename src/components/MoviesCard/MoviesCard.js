@@ -1,35 +1,61 @@
 import './MoviesCard.css';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
-const MoviesCard = ({ card }) => {
-  const [like, setLike] = React.useState(false);
+import './MoviesCard.css';
 
-  function handleLikeToogle() {
-    setLike(!like);
+function MoviesCard(props) {
+  const image = props.isOnlySaved ? props.card.image : `https://api.nomoreparties.co/${props.card.image.url}`
+
+  const duration = () => {
+    if (props.card.duration > 60) {
+      return (props.card.duration / 60 | 0) + "ч " + props.card.duration % 60 + "м"
+    }
+    if (props.card.duration === 60) {
+      return (props.card.duration / 60) + "ч"
+    } else {
+      return props.card.duration + "м"
+    }
   }
 
-  const { pathname } = useLocation();
+  function handleMoviesSave() {
+    props.onMoviesSave(props.card)
+  }
+
+  function handleMoviesDelete() {
+    props.onMoviesDelete(props.card)
+  }
 
   return (
     <section className="card">
 
       <div className="card__element">
-        <p className="card__title">{card.title}</p>
+        <p className="card__title">{props.card.nameRU}</p>
         <div className="card__buttons">
-          {pathname === '/saved-movies' ? (
-            <button type="button" className="card__button card__button_delete" />
-          ) : (
+          {props.isOnlySaved ? 
+            <button 
+              type="button" 
+              className="card__button card__button_delete"
+              onClick={handleMoviesDelete}
+            /> :
+            (props.isSaveMovie(props.card) ?
             <button
               type="button"
-              className={`card__button card__button${like ? '_on' : '_off'}`}
-              onClick={handleLikeToogle}
+              className='card__button card__button_on'
+              onClick={handleMoviesDelete}
+            /> :
+            <button
+              type="button"
+              className='card__button card__button_off'
+              onClick={handleMoviesSave}
             />
           )}
         </div>
       </div>
-      <p className="card__duration">{card.duration}</p>
-      <img src={card.image} alt={card.title} className="card__img"></img>
+      <p className="card__duration">{duration()}</p>
+      <a className="card__image-content" href={props.card.trailerLink}
+        target="_blank" rel="noreferrer">
+      <img className="card__img" src={image} alt='Постер'></img>
+      </a>
     </section>
   );
 };

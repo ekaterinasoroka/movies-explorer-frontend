@@ -105,9 +105,19 @@
   transition: filter 0.3s linear;
 }
 
+.form__button_disabled {
+  background-color: #fff;
+  color: #8B8B8B;
+}
+
 .form__button:hover {
   cursor: pointer;
   filter: opacity(40%);
+}
+
+.form__button_disabled:hover {
+  cursor: default;
+  filter: none;
 }
 
 .form__text {
@@ -117,6 +127,23 @@
   color: #8B8B8B;
   font-size: 14px;
   line-height: 17px;
+}
+
+.form__error_server {
+  position: relative;
+  top: 100px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #EE3465;
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 14px;
+  opacity: 0;
+}
+
+.form__error_server-display {
+  opacity: 1;
 }
 
 @media all and (max-width: 768px) {

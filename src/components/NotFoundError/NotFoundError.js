@@ -3,7 +3,7 @@ import React from 'react';
 import './NotFoundError.css';
 import { Link } from 'react-router-dom';
 
-function NotFound() {
+function NotFoundError() {
   return (
     <div className="not-found">
       <h1 className="not-found__title">404</h1>
@@ -13,4 +13,4 @@ function NotFound() {
   );
 }
 
-export default NotFound;
+export default NotFoundError;

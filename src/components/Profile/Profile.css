@@ -78,6 +78,51 @@
   font-weight: 500;
 }
 
+.profile__input-error {
+  margin-top: 10px;
+  font-size: 10px;
+  line-height: 12px;
+  color: #EE3465;
+}
+
+.profile__save-button {
+  width: 100%;
+  margin: 169px 0 16px;
+  padding: 14px 0;
+  background: #3456F3;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+}
+
+.profile__save-button_disabled {
+  background: #F9F9F9;
+  color: #A0A0A0;
+}
+
+.profile__edit-status_ok {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #3DDC84;
+}
+
+.profile__edit-status_error {
+    font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #EE3465;
+}
+
 @media screen and (max-width: 768px) {
   .profile {
     margin: 236px auto 0;

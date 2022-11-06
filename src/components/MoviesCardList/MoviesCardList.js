@@ -1,32 +1,40 @@
 import './MoviesCardList.css';
-import React, { useState } from 'react';
+import Preloader from '../Preloader/Preloader'
 import MoviesCard from '../MoviesCard/MoviesCard';
-import Preloader from '../Preloader/Preloader';
 
-const MoviesCardList = ({ cards, moreMovies }) => {
-  const [isLoading, setIsLoading] = useState(false);
+function MoviesCardList(props) {
+  if (props.loading) return <Preloader />
+  if (props.cards.length === 0) return <span className="movies__error">Ничего не найдено</span>
+  if (props.serverError) return <span className="movies__error">Во время запроса произошла ошибка.
+    Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</span>
 
-  const handlePreloader = () => {
-    setIsLoading(true);
-  };
-
+  const foundMovies = JSON.parse(localStorage.getItem('foundMovies'))
   return (
     <section className="movies">
       <div className="movies__container">
-        {cards.map((item) => (
-          <MoviesCard key={item.id} card={item} />
-        ))}
+      {
+          props.cards.map(card => {
+            return (
+              <MoviesCard
+                card={card}
+                key={props.isOnlySaved ? card.movieId : card.id}
+                isSaveMovie={props.isSaveMovie}
+                isOnlySaved={props.isOnlySaved}
+                onMoviesSave={props.onMoviesSave}
+                onMoviesDelete={props.onMoviesDelete}
+              />
+            )
+          })
+        }
       </div>
-
-      {isLoading ? (
-        <Preloader />
-      ) : (
-        moreMovies && (
+      
           <div className="movies__button-container">
-            <button className="movies__button" type="button" onClick={handlePreloader}>Ещё</button>
+            {props.isOnlySaved ? '' :
+              (props.cards.length < foundMovies.length ?
+            <button className="movies__button" onClick={props.handleButtonMore} type="button">Ещё</button> 
+            : '')}
           </div>
-        )
-      )}
+       
     </section>
   );
 };
