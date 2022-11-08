@@ -81,4 +81,5 @@ class MainApi {
 
 const mainApi = new MainApi('https://api.evsoroka.nomoredomains.icu');
 
+
 export default mainApi;

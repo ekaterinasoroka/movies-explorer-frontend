@@ -4,7 +4,6 @@ import React from 'react';
 import './MoviesCard.css';
 
 function MoviesCard(props) {
-  const image = props.isOnlySaved ? props.card.image : `https://api.nomoreparties.co/${props.card.image.url}`
 
   const duration = () => {
     if (props.card.duration > 60) {
@@ -54,7 +53,7 @@ function MoviesCard(props) {
       <p className="card__duration">{duration()}</p>
       <a className="card__image-content" href={props.card.trailerLink}
         target="_blank" rel="noreferrer">
-      <img className="card__img" src={image} alt='Постер'></img>
+      <img className="card__img" src={props.isOnlySaved ? props.card.image : `https://api.nomoreparties.co/${props.card.image.url}`} alt='Постер'></img>
       </a>
     </section>
   );

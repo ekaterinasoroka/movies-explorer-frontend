@@ -28,6 +28,12 @@
   transition: filter 0.5s linear;
 }
 
+.movies__error {
+  font-size: 14px;
+  font-weight: 400;
+  color: #EE3465;
+}
+
 .movies__button:hover {
   cursor: pointer;
   filter: opacity(40%);
