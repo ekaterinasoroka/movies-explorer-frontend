@@ -4,15 +4,29 @@ import useFormWithValidation from '../../hook/useFormWithValidation';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function Profile(props) {
-  const [isInputDisabled, setIsInputDisabled] = useState(true)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
   const currentUser = useContext(CurrentUserContext);
   const { values, setValues, handleChange, errors, isValid, resetForm } =
   useFormWithValidation({});
 
+
+  useEffect(() => {
+    if (
+      values.name === currentUser.name ||
+      values.email === currentUser.email ||
+      !isValid
+    ) {
+      setIsInputDisabled(true);
+    } else {
+      setIsInputDisabled(false);
+    }
+  }, [currentUser, values, isValid]);
+
   useEffect(() => {
     setValues({ name: currentUser.name, email: currentUser.email });
   }, [setValues, currentUser]);
+
+  
 
   const updateProfile = (e) => {
     e.preventDefault();
@@ -20,18 +34,10 @@ function Profile(props) {
     resetForm();
   };
 
-  function handleEditProfile() {
-    setIsInputDisabled(false)
-  }
-
-  function handleSave() {
-    setIsSuccess(true)
-  }
-
   return (
     <section className="profile">
       <h2 className="profile__title">Привет, {currentUser.name}!</h2>
-      <form className="profile__form" onSubmit={updateProfile}>
+      <form className="profile__form" onSubmit={updateProfile} noValidate>
         <div className="profile__field">
           <label className="profile__label">Имя</label>
           <input 
@@ -42,8 +48,8 @@ function Profile(props) {
             minLength={2}
             maxLength={30}
             onChange={handleChange}
-            value={values.name}
-            disabled={isInputDisabled}
+            value={values.name || ''}
+  
           />
         </div>
         {errors?.name && <span className="profile__input-error">{errors.name}</span>}
@@ -55,41 +61,39 @@ function Profile(props) {
             name="email" 
             required 
             onChange={handleChange}
-            value={values.email}
-            disabled={isInputDisabled}
+            value={values.email || ''}
           />
         </div>
         {errors?.email && <span className="profile__input-error">{errors.email}</span>}
 
-        {isSuccess ? <p className="profile__edit-status_ok">Изменения сохранены</p> :
-          <span className="profile__edit-status_error">{errors?.email}</span>}
-
-        {isInputDisabled ? (
-          <>
+        {props.isUserUpdateSuccess ? (
+            <span className="profile__edit-status_ok">Данные успешно изменены</span>
+          ) : (
+            ''
+          )}
+          {props.isUserUpdateFailed ? (
+            <span className="profile__edit-status_error">
+              Произошла ошибка, попробуйте снова
+            </span>
+          ) : (
+            ''
+          )}
         <button 
-          className="profile__button profile__button_submit" 
+          className={`profile__button ${isInputDisabled ? "profile__button_disabled" : 
+            "profile__button"}`} 
           type="submit"
-          onClick={handleEditProfile}
+          disabled={isInputDisabled}
           >
             Редактировать
         </button>
         <button 
           className="profile__button profile__button_logout" 
-          type="submit"
+          type="button"
           onClick={props.onLogout}
           >
             Выйти из аккаунта
         </button>
-        </>
-        ) : (
-          <button className={isValid ? "profile__save-button hover-button" :
-            "profile__save-button profile__save-button_disabled"} 
-            onClick={handleSave} 
-            type="submit" 
-          >
-            Сохранить
-          </button>
-        )}
+
       </form>
     </section>
   )

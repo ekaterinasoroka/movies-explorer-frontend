@@ -18,6 +18,7 @@ import * as auth from '../../utils/Auth';
 import mainApi from '../../utils/MainApi';
 import moviesApi from '../../utils/MoviesApi';
 
+
 function App() {
 
   const [currentUser, setCurrentUser] = useState({});
@@ -30,6 +31,11 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
   const [moreMovies, setMoreMovies] = useState(0);
+  const [isUserUpdateSuccess, setIsUserUpdateSuccess] = useState(false);
+  const [isUserUpdateFailed, setIsUserUpdateFailed] = useState(false);
+  const [isFoundActive, setIsFoundActive] = React.useState(false);
+  const [isFoundError, setIsFoundError] = React.useState(false);
+
 
   useEffect(() => {
     mainApi.getUserInfo()
@@ -37,9 +43,14 @@ function App() {
         setCurrentUser(userInfo);
         setLoggedIn(true);
         getSavedMovies();
-        history.push('/movies');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        localStorage.clear();
+        history.push('/');
+        setMovies([]);
+        setSavedFilms([]);
+  });
 
   }, [history])
 
@@ -50,7 +61,7 @@ function App() {
           email,
           password,
         )
-          history.push('/movies');
+          // history.push('/movies');
       })
       .catch((err) => {
         setErrorMessage(err);
@@ -87,8 +98,10 @@ function App() {
       mainApi.updateUserInfo({ name, email })
         .then(() => {
           setCurrentUser({ name, email });
+          setIsUserUpdateSuccess(true)
         })
         .catch((err) => {
+          setIsUserUpdateFailed(true);
           setErrorMessage('Что-то пошло не так...');
           console.log(err.message)
         })
@@ -98,14 +111,18 @@ function App() {
       return auth.logout()
       .then(() => {
         setLoggedIn(false);
-        history.push('/signin');
+        history.push('/');
+        localStorage.clear();
+        setMovies([]);
+        setSavedFilms([]);
       })
       .catch((err) => console.log(err));
     };
   
   
     function searchMovie(movieName, shortFilms) {
-      setLoading(true)
+      setLoading(true);
+      setIsFoundActive(true);
       moviesApi.getMovies()
         .then((movies) => {
           const searchedMovies = movies.filter((item) => item.nameRU.toLowerCase().includes(movieName.toLowerCase()));
@@ -115,11 +132,13 @@ function App() {
           localStorage.setItem('shortFilms', shortFilms);
           setLoading(false);
           handleResize();
+          setIsFoundActive(true);
         })
         .catch((err) => {
           console.log(err.message);
           setLoading(false);
           setServerError(true);
+          setIsFoundError(true);
         })
     }
   
@@ -147,6 +166,7 @@ function App() {
     useEffect(() => {
       window.addEventListener('resize', checkWindowWidth);
       handleResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [windowWidth])
   
     function handleButtonMore() {
@@ -198,9 +218,10 @@ function App() {
 
   
   return (
+    <div className="App">
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="App">
-        <Header loggedIn={loggedIn}/>
+
+      <Header loggedIn={loggedIn}/>     
         <Switch>
           <Route exact path='/'>
             <Main />
@@ -219,6 +240,8 @@ function App() {
             onMoviesDelete={handleMoviesDelete}
             serverError={serverError}
             loading={loading}
+            isFoundError={isFoundError}
+            isFoundActive={isFoundActive}
           />
           <ProtectedRoute
             path='/saved-movies'
@@ -236,22 +259,25 @@ function App() {
             loggedIn={loggedIn}
             onSubmit={handleEditProfile}
             onLogout={onLogout}
+            loading={loading}
+            isUserUpdateSuccess={isUserUpdateSuccess}
+            isUserUpdateFailed={isUserUpdateFailed}
           />
           <Route path="/signup">
             <Register onRegister={onRegister} errorMessage={errorMessage}/>
+            {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signup" />}
           </Route>
           <Route path="/signin">
             <Login onLogin={onLogin} errorMessage={errorMessage}/>
+            {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signin" />}
           </Route>
           <Route path="*">
             <NotFoundError />
           </Route>
-          <Route>
-            {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/" />}
-          </Route>
         </Switch>     
-      </div> 
+
     </CurrentUserContext.Provider>   
+    </div> 
   );
 }
 

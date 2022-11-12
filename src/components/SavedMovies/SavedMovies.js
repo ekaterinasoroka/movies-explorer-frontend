@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './SavedMovies.css';
 import { useEffect, useState } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
@@ -28,7 +29,7 @@ function SavedMovies(props) {
 
   useEffect(() => {
     initFilteredMovies()
-  }, [])
+  }, [initFilteredMovies])
 
   return (
     <div className="saved-movies">

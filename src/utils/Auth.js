@@ -1,4 +1,5 @@
-export const url = 'https://api.evsoroka.nomoredomains.icu';
+export const url = 'http://localhost:4000';
+// export const url = 'https://api.evsoroka.nomoredomains.icu';
 
 const checkResponse = (res) => {
   if (res.ok) {
