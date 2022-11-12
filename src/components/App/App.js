@@ -61,7 +61,6 @@ function App() {
           email,
           password,
         )
-          // history.push('/movies');
       })
       .catch((err) => {
         setErrorMessage(err);

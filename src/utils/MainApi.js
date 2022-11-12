@@ -79,9 +79,6 @@ class MainApi {
   }
 }
 
-// const mainApi = new MainApi('https://api.evsoroka.nomoredomains.icu');
-const mainApi = new MainApi('http://localhost:4000');
-
-
+const mainApi = new MainApi('https://api.evsoroka.nomoredomains.icu');
 
 export default mainApi;
