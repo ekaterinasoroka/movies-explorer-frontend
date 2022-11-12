@@ -20,8 +20,6 @@ function Movies(props) {
         onMoviesDelete={props.onMoviesDelete}
         serverError={props.serverError}
         loading={props.loading}
-        isFoundError={props.isFoundError}
-        isFoundActive={props.isFoundActive}
       />
     </div>
   );

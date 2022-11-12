@@ -18,7 +18,6 @@ import * as auth from '../../utils/Auth';
 import mainApi from '../../utils/MainApi';
 import moviesApi from '../../utils/MoviesApi';
 
-
 function App() {
 
   const [currentUser, setCurrentUser] = useState({});
@@ -33,9 +32,6 @@ function App() {
   const [moreMovies, setMoreMovies] = useState(0);
   const [isUserUpdateSuccess, setIsUserUpdateSuccess] = useState(false);
   const [isUserUpdateFailed, setIsUserUpdateFailed] = useState(false);
-  const [isFoundActive, setIsFoundActive] = React.useState(false);
-  const [isFoundError, setIsFoundError] = React.useState(false);
-
 
   useEffect(() => {
     mainApi.getUserInfo()
@@ -61,6 +57,7 @@ function App() {
           email,
           password,
         )
+          // history.push('/movies');
       })
       .catch((err) => {
         setErrorMessage(err);
@@ -120,10 +117,10 @@ function App() {
   
   
     function searchMovie(movieName, shortFilms) {
-      setLoading(true);
-      setIsFoundActive(true);
+      setLoading(true)
       moviesApi.getMovies()
         .then((movies) => {
+          setMovies(movies)
           const searchedMovies = movies.filter((item) => item.nameRU.toLowerCase().includes(movieName.toLowerCase()));
           const foundMovies = shortFilms ? searchedMovies.filter((item) => item.duration <= 40) : searchedMovies;
           localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
@@ -131,13 +128,11 @@ function App() {
           localStorage.setItem('shortFilms', shortFilms);
           setLoading(false);
           handleResize();
-          setIsFoundActive(true);
         })
         .catch((err) => {
           console.log(err.message);
           setLoading(false);
           setServerError(true);
-          setIsFoundError(true);
         })
     }
   
@@ -239,8 +234,6 @@ function App() {
             onMoviesDelete={handleMoviesDelete}
             serverError={serverError}
             loading={loading}
-            isFoundError={isFoundError}
-            isFoundActive={isFoundActive}
           />
           <ProtectedRoute
             path='/saved-movies'
