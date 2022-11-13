@@ -4,7 +4,9 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList(props) {
   if (props.loading) return <Preloader />
-  if (props.cards.length === 0) return <span className="movies__error">Ничего не найдено</span>
+  if (props.cards === null) return <span className="movies__error"></span>
+  if (props.cards.length === 0 && !props.isOnlySaved) return <span className="movies__error">Ничего не найдено</span>
+
   if (props.serverError) return <span className="movies__error">Во время запроса произошла ошибка.
     Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</span>
 
