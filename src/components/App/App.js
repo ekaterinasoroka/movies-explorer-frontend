@@ -34,28 +34,6 @@ function App() {
   const [isUserUpdateFailed, setIsUserUpdateFailed] = useState(false);
 
   useEffect(() => {
-    if (loggedIn) {
-      mainApi.getUserInfo()
-        .then(() => {
-          setMovies(null);
-          
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
-    localStorage.setItem('savedFilms', JSON.stringify(savedFilms));
-    
-  }, [savedFilms]);
-
-  useEffect(() => {
-    if(localStorage.getItem('savedFilms')) {
-      setSavedFilms(localStorage.getItem('savedFilms'));
-    }
-  }, []);
-  
-  useEffect(() => {
     mainApi.getUserInfo()
       .then((userInfo) => {
         setCurrentUser(userInfo);
@@ -65,11 +43,17 @@ function App() {
       .catch((err) => {
         console.log(err);
         localStorage.clear();
-        history.push('/');
-        setMovies([]);
-        setSavedFilms([]);
+        setMovies(null);
   });
-  }, [history])
+  }, [])
+
+  useEffect(() => {
+    if(loggedIn)
+    mainApi.getSavedMovies()
+    .then((data) => {
+      setSavedFilms(data);
+    })
+  }, [loggedIn])
 
   function onRegister(name, email, password) {
     return auth.register(name, email, password)
@@ -129,8 +113,7 @@ function App() {
       setLoggedIn(false);
       history.push('/');
       localStorage.clear();
-      setMovies([]);
-      setSavedFilms([]);
+      setMovies(null);
     })
     .catch((err) => console.log(err));
   };
@@ -140,6 +123,7 @@ function App() {
     setLoading(true)
     moviesApi.getMovies()
       .then((movies) => {
+        setMovies(movies);
         const searchedMovies = movies.filter((item) => item.nameRU.toLowerCase().includes(movieName.toLowerCase()));
         const foundMovies = shortFilms ? searchedMovies.filter((item) => item.duration <= 40) : searchedMovies;
         localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
@@ -196,7 +180,6 @@ function App() {
     mainApi.getSavedMovies()
       .then((res) => {
         setSavedFilms(res.filter((movie) => movie.owner === currentUser?._id));
-        
       })
       .catch((err) => {
         console.log(err.message);
@@ -206,7 +189,8 @@ function App() {
   function handleMoviesSave(movie) {
     mainApi.likeAndAddMovie(movie)
       .then((movieData) => {
-        setSavedFilms([...savedFilms, movieData]);
+        localStorage.setItem('savedFilms', JSON.stringify(savedFilms));
+        setSavedFilms([movieData, ...savedFilms ]);
       })
       .catch((err) => {
         console.log(err.message);
@@ -232,12 +216,11 @@ function App() {
   function isSaveMovie(card) {
     return savedFilms.some(item => item.movieId === card.id && item.owner === currentUser?._id)
   }
-
   
   return (
-    <div className="App">
     <CurrentUserContext.Provider value={currentUser}>
-      <Header loggedIn={loggedIn}/>     
+      <div className="App">
+        <Header loggedIn={loggedIn}/>     
         <Switch>
           <Route exact path='/'>
             <Main />
@@ -289,9 +272,8 @@ function App() {
             <NotFoundError />
           </Route>
         </Switch>     
-
+      </div> 
     </CurrentUserContext.Provider>   
-    </div> 
   );
 }
 

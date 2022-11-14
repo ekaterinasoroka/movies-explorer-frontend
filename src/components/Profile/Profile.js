@@ -12,8 +12,8 @@ function Profile(props) {
 
   useEffect(() => {
     if (
-      values.name === currentUser.name ||
-      values.email === currentUser.email ||
+      (values.name === currentUser.name &&
+      values.email === currentUser.email) ||
       !isValid
     ) {
       setIsInputDisabled(true);

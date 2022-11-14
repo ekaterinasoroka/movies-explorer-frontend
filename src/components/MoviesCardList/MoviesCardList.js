@@ -4,8 +4,8 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList(props) {
   if (props.loading) return <Preloader />
-  if (props.cards === null) return <span className="movies__error"></span>
-  if (props.cards.length === 0 && !props.isOnlySaved) return <span className="movies__error">Ничего не найдено</span>
+  if (props.cards === []) return <span className="movies__error">Ничего не найдено</span>
+
 
   if (props.serverError) return <span className="movies__error">Во время запроса произошла ошибка.
     Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</span>
@@ -14,8 +14,7 @@ function MoviesCardList(props) {
   return (
     <section className="movies">
       <div className="movies__container">
-      {
-          props.cards.map(card => {
+          {props.cards?.map(card => {
             return (
               <MoviesCard
                 card={card}
@@ -32,7 +31,7 @@ function MoviesCardList(props) {
       
           <div className="movies__button-container">
             {props.isOnlySaved ? '' :
-              (props.cards.length < foundMovies.length ?
+              (props.cards?.length < foundMovies?.length ?
             <button className="movies__button" onClick={props.handleButtonMore} type="button">Ещё</button> 
             : '')}
           </div>
